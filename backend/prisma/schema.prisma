@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  email      String      @unique
+  password   String
+  name       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  candidates Candidate[]
+
+  @@map("users")
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  PARTIAL
+}
+
+model Candidate {
+  id               String             @id @default(uuid())
+  name             String
+  email            String
+  phone            String?
+  aadhaarNumber    String
+  panNumber        String
+  address          String?
+  status           VerificationStatus @default(PENDING)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  userId           String
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verificationLogs VerificationLog[]
+
+  @@map("candidates")
+}
+
+model VerificationLog {
+  id          String    @id @default(uuid())
+  candidateId String
+  checkType   String
+  status      String
+  message     String
+  createdAt   DateTime  @default(now())
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@map("verification_logs")
+}
