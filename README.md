@@ -1,6 +1,12 @@
 # VShield — Background Verification Platform
 
-A full-stack background verification platform for validating candidate identity documents (Aadhaar + PAN) with a clean professional UI.
+Overview
+
+vShield is a full-stack enterprise-grade Background Verification Platform built to streamline candidate identity verification workflows for recruiters, HR teams, and organizations.
+
+The platform enables secure candidate onboarding, Aadhaar and PAN verification workflows, verification audit logging, PDF report generation, and professional dashboard analytics.
+
+The project follows scalable SaaS architecture principles with modular backend services, secure authentication, REST APIs, relational database modeling, and production deployment.
 
 ## Tech Stack
 
