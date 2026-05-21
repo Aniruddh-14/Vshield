@@ -1,6 +1,5 @@
 # VShield — Background Verification Platform
 
-Overview
 
 VShield is a full-stack enterprise-grade Background Verification Platform built to streamline candidate identity verification workflows for recruiters, HR teams, and organizations.
 
