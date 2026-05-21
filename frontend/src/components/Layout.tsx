@@ -1,13 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import {
-  Shield,
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  LogOut,
-  Menu,
-  X,
-} from 'lucide-react';
+import { Shield, LayoutDashboard, Users, UserPlus, LogOut, Menu, X, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 
@@ -28,50 +20,68 @@ export const Layout = () => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2.5 px-6 py-5 border-b border-gray-100">
-        <div className="flex items-center justify-center w-8 h-8 bg-indigo-600 rounded-lg">
-          <Shield className="w-4 h-4 text-white" />
+    <div className="flex flex-col h-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900">
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-6 py-6 border-b border-white/10">
+        <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-xl shadow-lg shadow-indigo-500/30">
+          <Shield className="w-5 h-5 text-white" />
         </div>
-        <span className="text-lg font-bold text-gray-900">VShield</span>
+        <div>
+          <span className="text-lg font-bold text-white tracking-tight">VShield</span>
+          <p className="text-xs text-indigo-300/70 -mt-0.5">Verification Platform</p>
+        </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-5 space-y-1">
+        <p className="px-3 mb-3 text-xs font-semibold text-indigo-300/50 uppercase tracking-widest">Menu</p>
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
-            end={to !== '/candidates'}
+            end={to === '/dashboard'}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              `group flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive
-                  ? 'bg-indigo-50 text-indigo-700'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-white/15 text-white shadow-sm'
+                  : 'text-indigo-200/70 hover:bg-white/8 hover:text-white'
               }`
             }
           >
-            <Icon className="w-4 h-4 flex-shrink-0" />
-            {label}
+            {({ isActive }) => (
+              <>
+                <div className="flex items-center gap-3">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all ${isActive ? 'bg-indigo-500/40' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  {label}
+                </div>
+                {isActive && <ChevronRight className="w-3.5 h-3.5 text-indigo-300" />}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="px-3 py-4 border-t border-gray-100">
-        <div className="flex items-center gap-3 px-3 py-2 mb-1">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-semibold flex-shrink-0">
+      {/* User */}
+      <div className="px-3 py-4 border-t border-white/10">
+        <div className="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl bg-white/5">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md">
             {user?.name?.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
+            <p className="text-xs text-indigo-300/60 truncate">{user?.email}</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-indigo-300/70 hover:bg-red-500/15 hover:text-red-300 transition-all"
         >
-          <LogOut className="w-4 h-4" />
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5">
+            <LogOut className="w-4 h-4" />
+          </div>
           Sign Out
         </button>
       </div>
@@ -79,24 +89,18 @@ export const Layout = () => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-slate-50">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col w-64 bg-white border-r border-gray-200 flex-shrink-0">
+      <aside className="hidden lg:flex lg:flex-col w-64 flex-shrink-0 shadow-xl shadow-slate-900/20">
         <SidebarContent />
       </aside>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="fixed inset-0 bg-gray-600 bg-opacity-75"
-            onClick={() => setSidebarOpen(false)}
-          />
-          <aside className="relative flex flex-col w-64 h-full bg-white shadow-xl">
-            <button
-              className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600"
-              onClick={() => setSidebarOpen(false)}
-            >
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+          <aside className="relative flex flex-col w-64 h-full shadow-2xl">
+            <button className="absolute top-4 right-4 p-1.5 text-indigo-300/70 hover:text-white rounded-lg z-10" onClick={() => setSidebarOpen(false)}>
               <X className="w-5 h-5" />
             </button>
             <SidebarContent />
@@ -104,14 +108,11 @@ export const Layout = () => {
         </div>
       )}
 
-      {/* Main content */}
+      {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile topbar */}
-        <header className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-1.5 text-gray-500 hover:text-gray-700 rounded-md"
-          >
+        <header className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-100 shadow-sm">
+          <button onClick={() => setSidebarOpen(true)} className="p-1.5 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
@@ -120,7 +121,7 @@ export const Layout = () => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
